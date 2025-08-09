@@ -6,7 +6,7 @@
 #    By: jcummins <jcummins@student.42prague.com>   +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/08/09 22:55:48 by jcummins          #+#    #+#              #
-#    Updated: 2025/08/09 23:17:14 by jcummins         ###   ########.fr        #
+#    Updated: 2025/08/09 23:32:15 by jcummins         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,12 +16,7 @@ SRCS = main.c
 
 COBJS = main.o
 
-ASMS = 	ft_strlen.s
-		ft_strcpy.s
-		ft_strcmp.s
-		ft_write.s
-		ft_read.s
-		ft_strdup.s
+ASMS = 	ft_strlen.s ft_strcpy.s ft_strcmp.s ft_write.s ft_read.s ft_strdup.s
 
 AOBJS = $(ASMS:.c=.o)
 
