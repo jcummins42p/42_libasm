@@ -1,13 +1,19 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    ft_strlen.s                                        :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: jcummins <jcummins@student.42prague.com>   +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2025/08/09 23:29:18 by jcummins          #+#    #+#              #
-#    Updated: 2025/08/09 23:29:19 by jcummins         ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
+; comments in assembly indicated by semi-colon
+; ft_strlen.s (NASM, Linux x86-64 SysV)
+; size_t ft_strlen(const char *s);
 
+; to use gdb with nasm, set to use intel-style disassembly with the command
+;	set disassembly-flavor intel
 
+global ft_strlen
+section .text
+
+ft_strlen:
+	xor	rax,rax				; rax = length (counter)
+.loop:
+	cmp	byte [rdi + rax], 0	 ; s[rax] == '\0' ?
+	je	.done
+	inc	rax
+	jmp	.loop
+.done:
+	ret
