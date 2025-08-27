@@ -8,8 +8,8 @@ Base 2 Compared to base 10 decimal. Don't need to make notes here.
 ## Binary Basics 2:
 
 ### Adding binary
-Simply base 2. carry the 1 if 1 + 1
-e.g. 1+1 == 10
+Simply base 2. Carry the 1 if 1 + 1
+* e.g. 1 + 1 == 10
 
 ### Signed binary numbers:
 Typically group in 8 bits = byte, further divide into two halves of 4 bits each.
@@ -56,38 +56,33 @@ Therefore a whole byte is only two characters in hex. Very basic.
 ## x86 Processor Architecture:
 
 How things are fetched from memory, how it processes instructions.
-```
-CPU: ALU (arithmetic logic unit), Control Unit, Clock, Registers
-Memory
-I/O decive
-```
+* CPU: ALU (arithmetic logic unit), Control Unit, Clock, Registers
+* Memory
+* I/O decive
+
 ## Busses
 
 Ways that the cpu communicates with other devices - over buses
-```
-Control Bus: Helps synchronise all actions attached to the bus
-Address Bus: Holds Addresses in data, pointing to different locations where things will move
-Data Bus: Handles transfer of data between places
-```
+* Control Bus: Helps synchronise all actions attached to the bus
+* Address Bus: Holds Addresses in data, pointing to different locations where things will move
+* Data Bus: Handles transfer of data between places
 
 ## CPU:
 ### Architecture
-```
-High Frequency Clock - Cycles between off and on (one whole cycle) to synchronise between the CPU and bus
-Control Unit - Decode binary and direct operations to other units
-ALU (Arithmetic logic unit) - Carries out logical operations
-Registers (Storage Locations) - Fast Storage that's very close to the CPU
-```
+* High Frequency Clock - Cycles between off and on (one whole cycle) to synchronise between the CPU and bus
+* Control Unit - Decode binary and direct operations to other units
+* ALU (Arithmetic logic unit) - Carries out logical operations
+* Registers (Storage Locations) - Fast Storage that's very close to the CPU
+
 ### Instruction Execution Cycle
 The CPU completes apredefined set of steps to execute an instruction
 This is called a **Fetch decode execute procedure**
-```
 1.	Fetch an instruction from the instruction queue
 2.	Decode the instruction and check for operands
 3.	If operands are involved, fetch the operands from memory/registers
 4.	Execute the instruction and update status flags
 5.	Store the result if required
-```
+
 ### Reading from Memory
 Memory access is slower than register access
 Requires the following steps:
@@ -148,15 +143,15 @@ Constructed using static RAM, which does not need to be refreshed constantly vs 
 	* AC (auxiliary carry)
 	* PF (parity flag)
 
-# Writing pragrams using NASM
+# Writing programs using NASM
 * NASM creates simplified syntax based on intel. Linux tends to use AT&T internally which is more complex and hard to learn
 Here's a sample program - it stores 1 in both eax and ebx registers, and calls the system to exit (eax) with return code 1 (ebx)
 ```
-section .data ; stores variables
+section .data	; stores variables
 
-section .text ; code to run
-global _start ; _start is a label for a section of code
-			; exporting _start with global which tells the computer where to start the program.
+section .text 	; code to run
+global _start 	; _start is a label for a section of code
+				; exporting _start with global which tells the computer where to start the program.
 _start:
 	MOV eax,1	; MOV moves data from one location to another
 	MOV ebx,1
@@ -502,7 +497,7 @@ _start:
 	INT 0x80
 ```
 
-# Comparing floats
+# Comparing Floats
 * There are similarly functioning but differently named commands for float comparison
 * JE still works the same as equals, though.
 ```
