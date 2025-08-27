@@ -1,15 +1,3 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    README.md                                          :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: jcummins <jcummins@student.42prague.com>   +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2025/08/27 16:35:13 by jcummins          #+#    #+#              #
-#    Updated: 2025/08/27 18:03:49 by jcummins         ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
-
 # NOTES:
 
 From OliverStem Foundations of Assembly Programming Youtube Playlist
