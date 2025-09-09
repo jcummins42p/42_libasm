@@ -1,6 +1,6 @@
 # NOTES:
 
-From OliverStem Foundations of Assembly Programming Youtube Playlist
+From OliverStem Foundations of Assembly Programming Youtube Playlist, covering x86 (32 bit) basics
 
 ## Binary Basics 1:
 Base 2 Compared to base 10 decimal. Don't need to make notes here.
@@ -613,4 +613,143 @@ main:
 # Function Arguments
 * Often data must be put onto the stack because registers are a finite and precious resource
 * Requires a little intricacy
+```
+addTwo:
+	PUSH ebp	; storing the old ebp on the stack, regardless whether it exists
+	MOV ebp,esp	; esp points to the stack segment where the return address is stored
+				; [esp] is the return address (the value held in that pointer)
+				; i.e. an address in the .text segment
+	MOV eax,[ebp+8]
+	MOV ebx,[ebp+12]
+	ADD eax,ebx
+	POP ebp		; remove the top value of the stack into register ebp
+	RET
 
+main:
+	PUSH 4
+	PUSH 1
+	CALL addTwo
+	MOV ebx,eax
+```
+
+# Opening and Reading Files
+* Use the nps.edu linux system call table to see what values go into eax to create a particular system call.
+* e.g. 1 = exit
+* The type of call is decided by the integer in eax, other registers can be parameters
+* In this case we are opening a file with sys_open which takes
+	* ebx: const char *
+	* ecx: int
+	* edx: int
+* Find the macro definitions by grepping in /usr/include
+	* grep -R "O_RDONLY" /usr/include
+```
+section .data
+	pathname DD "/home/jcummins/asmtest.txt"
+
+section .bss
+	buffer: resb 1024	; reserve bytes to read file into
+
+section .text
+global main
+
+main:
+	MOV eax,5	; 5 is sys_open
+	MOV ebx,pathname
+	MOV ecx,0	; 0 is O_RDONLY
+	INT 0x80	; execute open call, putting fd into eax
+
+	MOV ebx,eax	; store fd in ebx
+	MOV eax,3	; 3 is sys_read
+	MOV ecx,buffer	; read requires buffer in ecx
+	MOV edx,1024	; size to read
+	INT	0x80	; returns number of bytes read from file
+				; returns 0 if we reached EOF
+	MOV eax,1
+	MOV ebx,0
+	INT 0x80	; exit
+```
+* In GDB, view the string by using x/s <data address>
+* for example, for buffer in ecx, address 0x804c038:
+	* x/s 0x804c038
+
+# Using Lseek with files
+* Allows us to move around files if we currently have one open
+* To move to different areas in a file, typically used with fixed size record files
+* A line with 9 characters would be 10 characters because the newline counts as one
+```
+section .data
+	pathname DD "seektest.txt"
+section .bss
+	buffer: resb 10
+section .text
+global main
+
+main:
+	MOV eax,5 ; preparing 'open' syscall
+	MOV ebx,pathname
+	MOV ecx,0
+	INT 0x80
+
+	MOV ebx,eax	; save file descriptor in ebx for lseek
+	MOV eax,19	; preparing 'lseek' syscall
+	MOV ecx,20	; off_t is the number of bytes to offset from current position
+	MOV edx,0	; whence offsetting from:
+				;	0 SEEK_SET from the front of the file plus offset bytes
+				;	1 SEEK_CUR from the current location plus offset bytes
+				;	2 SEEK_END from the end of the file plus offset bytes
+				;	unistd.h for these definitions
+	INT 0x80	; making lseek call
+
+	MOV eax,3	; preparing 'read' syscall
+	MOV ecx,buffer	; location to read into
+	MOV edx,10	; amount of bytes to read
+	INT 0x80
+
+	MOV ebx,0
+	MOV eax,1
+	INT 0x80
+```
+
+# Creating and Writing Files
+* In order to use multiple flags, bitwise OR them together.
+	* decalre each flag individually and OR their registers
+	* or just figure out the number yourself and document it so it's readable
+```
+section .data
+	pathname DB "newfile.txt",0x0
+	toWrite DB "Hello World!",0x0A,"Writing from assembly",0x0A
+	len equ $ - toWrite ; calculate compile-time length of 'toWrite'
+
+section .text
+global main
+
+main:
+	MOV eax,5
+	MOV ebx,pathname
+	MOV ecx,101o	; 0 after number denotes OCTAL value: CREATE and WRITE
+	MOV edx,700o	; UNIX file permissions for rwx
+	INT 0x80
+
+	INT ebx,eax	; save the file descriptor in eax
+	MOV eax,4	; 'write' syscall
+	MOV ecx,toWrite ; buffer to write
+	MOV edx,len
+	INT 0x80
+
+	MOV eax,1
+	MOV ebx,0
+	INT 0x80
+```
+* To bitwise OR flags and permissions:
+```
+0100 OR
+0001 ==
+----
+0101
+
+0400 OR
+0200 OR
+0100 =
+----
+0700
+```
