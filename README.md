@@ -753,3 +753,148 @@ main:
 ----
 0700
 ```
+--------------------
+# ***Simple x86 Operating System Fundamentals***
+* Toy operating system from bootloader to basic os functionality
+# x86 Operating Systems: Building a Bootloader
+* A bootloader is a program that's responsible for booting a computer
+* When a computer first boots it enters BIOS: basic input output system
+* BIOS contains utilities and tools that allow the os to perform hardware init
+* In legacy booting format, the BIOS will search for the os on the disk
+	* Takes each bootable device and loads them into memory at location 0x7C00
+	* Checks the are loaded into memory for the signature 0xAA55
+	* If it sees the signature, it starts executing code from that data segment
+	* So the most basic bootloader needs to write 0xAA55 at 0x7C00
+### Bootloader Assembly main.s
+```
+ORG 0x7C00	; All addressing done relative to this address
+			; BIOS loads everything at this address
+BITS 16		; Setting bits for operating system
+			; For backwards compatibility - move to 32 or 64 after setup
+
+main:
+	HLT		; Halt instruction pauses the CPU until a particular signal
+
+halt:
+	JMP halt	; To freeze OS
+
+TIMES 510-($-$$) DB 0	; TIMES repeats an instruction a set number of times
+						; $-$$ is how many bytes out program currently takes up
+						; So this will write enough 0 bytes to get us to 510
+						; bytes after 0x7C00 in memory
+DW 0xAA55	; Write the bootloader signature value in the last 2 bytes to make
+			; up a full 512 byte memory block
+```
+### Makefile to create bootable image
+```
+ASM=nasm
+
+NAME=main.img
+SRC_DIR=src
+BUILD_DIR=build
+
+# To create image, requires main.bin file
+# truncate to fill out the full 'floppy drive'
+# I guess an valid image needs to take up the full media size?
+$(BUILD_DIR)/$(NAME): $(BUILD_DIR)/main.bin
+	cp $(BUILD_DIR)/main.bin $(BUILD_DIR)/main.img
+	truncate -s 1440k $(BUILD_DIR)/main.img
+
+# To create the main.bin file
+# Creating a bin file out of main.s an placing output in $BUILD_DIR
+$(BUILD_DIR)/main.bin: $(SRC_DIR)/main.s
+	$(ASM) $(SRC_DIR)/main.s -f bin -o $(BUILD_DIR)/main.bin
+
+clean:
+	rm $(BUILD_DIR)/*
+
+re: clean all
+
+.PHONY: re clean all
+```
+### Booting Image with QEMU
+* Install qemu - from source code or 'apt-get install qemu-system'
+* qemu-system-i386 -fda build/main.img
+
+# Printing a Message In Bios
+* Within the same structure as the previous bootloader, write a message to BIOS 
+```
+main:
+	MOV ax,0	; Initialize ax register to 0 and use that to write to others
+	MOV ds,ax	; ds tracks start address of 'data' segment
+	MOV es,ax	; es tracks start address of 'extra' segment
+	MOV ss,ax	; ss sets start address of the stack
+
+	MOV sp,0x7C00	; stack pointer to start address of application
+		; the stack grows downwards, so this allows it to extend away from thhe
+		; application code
+	MOV si,os_boot_msg	; put the address of the boot message in this register
+	CALL print
+	HLT		; Halt instruction pauses the CPU until a particular signal
+
+halt:
+	JMP halt	; To freeze OS
+
+print:	; save register values on the stack
+	PUSH si
+	PUSH ax
+	PUSH bx
+
+print_loop: ; loads data from string into memory, print character by character
+	LODSB	; load single byte (char) into the al register
+	OR al,al	; checks whether current byte is null and sets zero flag if so
+	JZ done_print
+
+	MOV ah,0x0E	; printing a character to the screen
+	MOV bh,0	; page number (multiple monitors, for example)
+	INT 0x10	; video interrupt - value in ah dictates PRINT value in al
+
+	JMP print_loop
+
+done_print: ; put the previous register values back from the stack
+	POP bx
+	POP ax
+	POP si
+	RET
+
+os_boot_msg: DB "Hello OS World!",0x0D,0x0A,0 ; carriage return, newline, null
+```
+
+# Disk Structure
+* Have to start interacting with disk 
+* terminology references hard drive but the ideas remain the same regardless of the type of device, e.g. SSD
+* HDD structure:
+	* Platter and head (2 heads per platter: top and bottom)
+	* Bot heads can be written and read from
+	* Head divided into tracks, which are divided into sectors
+	* A cylinder is all the neighbouring tracks on many different heads
+* CHS: Cylinder-head-sector
+	* Defines a tuple of the cylinder, head, and sector of data
+	* Still used for partitioning
+	* BIOS based interrups can use this
+* LBA: Logical Block Addressing
+	* Linear addressing scheme by integer index
+	* 0, 1, etc.
+	* Easier to abstract into general terminology
+* Converting CHS to LBA
+	* LBA = (C * TH * TS) + (H * TS) + (S - 1)
+	* C  -> Sector cylinder number
+	* TH -> Total heads on disk
+	* TS -> Total sectors per head
+	* H  -> Sector head number
+	* S  -> Sector number
+* Converting LBA to CHS
+	* t = LBA/sectors per track
+	* s = (LBA % sectors per track) + 1
+	* h = (t % number of heads)
+	* c = (t / number of heads)
+
+# Creating a FAT12 Disk
+* File Allocation Table ECMA-107 1995
+	* Designed 1977
+	* Over time extended with FAT16, FAT32, exFAT as drive capacity increased
+	* Good compatibility across operating systems and embedded systems
+	* Used internally for the EFI system partition in boot stage of UEFI computers
+	* Used in drives expected to be used by multiple operating systems
+	* The FAT is a linked list of entries for each cluster
+	* Each entry in the FAT is a fixed number of bits: 12, 16, 32 etc
