@@ -1,5 +1,5 @@
 ; comments in assembly indicated by semi-colon
-; ft_strlen.s (NASM, Linux x86-64 SysV)
+; ft_strlen.s (NASM, Linux x86-64 SysV calling convention)
 ; size_t ft_strlen(const char *s);
 
 ; to use gdb with nasm, set to use intel-style disassembly with the command
