@@ -792,7 +792,7 @@ main:
 		* Allows direct access to custom hardware operation without device driver intermediary
 * Widely used EABIs include PowerPC, Arm, MIPS
 
-# x86 Calling Conventions
+# Calling Conventions
 * Calling Conventions Describe the Interface of called code:
 	* The order in which parameters are allocated
 	* How parameters are passed
@@ -803,9 +803,9 @@ main:
 		* callee-saved registers or non-volatile registers
 	* How the task of preparing and restoring the stack is divided
 * There are many different conventions for different types of call in x86
+* Thankfully I don't need to learn those for libasm which is x86-64
 
 # x86-64 Calling Conventions
-* Thankfully I don't need to learn those for libasm which is x86-64
 * These benefit from added register space to pass more args as registers
 * Also, the many incompatible conventions of x86 has been reduced to two:
 	* Microsoft x64 Calling Convention
@@ -814,14 +814,14 @@ main:
 		* Used in Solaris, Linux, FreeBSD, macOS
 		* De-facto standard amongst Unix and Unix-like OSes
 | Argument Type | Registers |
------------------------------
+| --- | --- |
 | Integer/pointer args 1-6 | RDI, RSI, RDX, RCX, R8, R9 |
 | Floating point args 1-8 | XMM0 - XMM7 |
 | Excess arguments | Stack |
 | Static Chain Pointer | R10 |
 
 | Return Type | Registers |
----------------------------
+| --- | --- |
 | Integer to 64bit | RAX |
 | Int 64 - 128 bit | RAX and RDX |
 | Float | XMM0 or XMM0 + XMM1 |
