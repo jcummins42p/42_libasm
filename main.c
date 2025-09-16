@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 23:27:57 by jcummins          #+#    #+#             */
-/*   Updated: 2025/09/10 22:38:25 by jcummins         ###   ########.fr       */
+/*   Updated: 2025/09/16 16:22:50 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,17 +41,30 @@ int ft_strlen(const char *str);
 //	allows the assembly to take fewer precautions to preserve values in case
 //	of pointer aliasing
 char *ft_strcpy(char *restrict dst, char *restrict src);
+int	ft_strcmp(const char *s1, const char *s2);
 
 //	Pass an expression that should equal 0 on success
 void set_result_color(int failed) {
 	if (failed)
-		printf(ANSI_COLOR_GREEN);
+		printf(ANSI_COLOR_RED);
 	else
-		printf(ANSI_COLOR_RED "");
+		printf(ANSI_COLOR_GREEN);
 }
 
 void reset_color(void) {
-	printf(ANSI_COLOR_RESET "");
+	printf(ANSI_COLOR_RESET);
+}
+
+int test_strcmp(const char *s1, const char *s2) {
+	int std_result = strcmp(s1,s2);
+	int ft_result = ft_strcmp(s1,s2);
+
+	printf("Testing ft_strlen against strcmp from string.h...\n");
+	set_result_color(std_result - ft_result);
+	printf("\tResult of std strcmp = %d\n", std_result);
+	printf("\tResult of ft_strcmp = %d\n", ft_result);
+	reset_color();
+	return (std_result == ft_result ? 0 : 1);
 }
 
 int test_strlen(const char *test) {
@@ -62,18 +75,21 @@ int test_strlen(const char *test) {
 	set_result_color(std_result - ft_result);
 	printf("\tLength of string \"%s\" with std strlen:\t%d\n", test, std_result);
 	printf("\tLength of string \"%s\" with ft_strlen:\t%d\n", test, ft_result);
-	return (reset_color(), std_result == ft_result ? 0 : 1);
+	reset_color();
+	return (std_result == ft_result ? 0 : 1);
 }
 
 int test_strcpy(char *test) {
 	char std_buf[1024];
 	char ft_buf[1024];
 
+	printf("Testing ft_strcpy against strcpy from string.h...\n");
 	strcpy(std_buf, test);
 	ft_strcpy(ft_buf, test);
 	set_result_color(strcmp(std_buf, ft_buf));
 	printf("\tString copied by std strcpy:\t%s\n", std_buf);
 	printf("\tString copied by ft_strcpy:\t%s\n", ft_buf);
+	reset_color();
 	return (strcmp(ft_buf, std_buf) ? 1 : 0);
 }
 
@@ -121,6 +137,7 @@ int main(void) {
 	printf("Testing assembly code for libasm project\n");
 	result &= test_strlen("Hello There");
 	result &= test_strcpy("Hello There");
+	result &= test_strcmp("", "ABC");
 	final_result(result);
 	return 0;
 }

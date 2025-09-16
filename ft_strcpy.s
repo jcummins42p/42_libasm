@@ -5,14 +5,21 @@ section .text
 
 ; argument order: rdi, rsi, rdx, rcx, r8, r9
 ; argument 2 is src, copy depends on its length only
+; Callee-saved registers need to be saved and reset to original values
+;	these inclue: rbx, rbp, r12-15
 ft_strcpy:
 	xor rax,rax	; zero the count
 
 .loop:
 	cmp byte [rsi + rax], 0 ; check there is more source to write
 	je .done
-	mov rbx,[rsi + rax]		; put current src byte in temp register
-	mov [rdi + rax],rbx 	; copy the byte from src to dst
+	;mov rbx,[rsi + rax]	; This didn't work - copied 8 bytes at a time
+	;mov [rdi + rax],rbx 	; because it used the whole 64-bit register
+	;mov bl,[rsi + rax]		; put current src byte in temp 8-bit register
+	;mov [rdi + rax],bl 		; but b is a callee-saved register so this was
+		; clobbering values in rbx that needed to be saved
+	mov dl,[rsi + rax]
+	mov [rdi + rax], dl
 	inc rax
 	jmp .loop
 
