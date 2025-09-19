@@ -1,27 +1,42 @@
+; **************************************************************************** #
+;                                                                              #
+;                                                         :::      ::::::::    #
+;    ft_strcmp.s                                        :+:      :+:    :+:    #
+;                                                     +:+ +:+         +:+      #
+;    By: jcummins <jcummins@student.42prague.com>   +#+  +:+       +#+         #
+;                                                 +#+#+#+#+#+   +#+            #
+;    Created: 2025/09/19 15:08:47 by jcummins          #+#    #+#              #
+;    Updated: 2025/09/19 15:08:47 by jcummins         ###   ########.fr        #
+;                                                                              #
+; **************************************************************************** #
+
 global ft_strcmp
 
 section .text
 
 ; argument order: rdi, rsi
 ft_strcmp:
-	cmp byte [rdi], 0x00	; only checking if rdi is null
-		; logically, if rsi is null and rdi isn't, that will be caught in cmp
-	je	end
-	mov dl,[rdi]
-	cmp dl,[rsi]
-	jne end
 
 loop:
+	mov dl,[rdi]
+	mov cl,[rsi]
+	cmp byte dl, 0x00
+	je	end
+	cmp dl,cl
+	jne	end
 	inc rdi	; increment both pointers
 	inc rsi
-	cmp byte [rdi], 0x00
-	je	end
-	mov dl,[rdi]
-	cmp dl,[rsi]
-	je	loop
+	jmp	loop
 
 end:
-	movsx rax,byte [rdi] ; need to promote bytes to 32-bit int for return value
-	movsx rcx,byte [rsi]
-	sub rax,rcx
+	;	movsx = move with sign extension
+	movsx eax,dl ; need to promote bytes to 32-bit int for return value
+	movsx ecx,cl
+	sub eax,ecx
 	ret
+
+;	Needing to debug this with valgrind, since it's producing different results
+;	valgrind --vgdb=yes --vgdb-error=0 <prog>
+;	in another shell:	gdb <prog>
+;	then in gdb:		target remote vgdb
+;	This ONLY happens when strings are unequal length

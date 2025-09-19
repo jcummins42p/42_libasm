@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 23:27:57 by jcummins          #+#    #+#             */
-/*   Updated: 2025/09/19 12:03:34 by jcummins         ###   ########.fr       */
+/*   Updated: 2025/09/19 18:43:20 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,29 +50,30 @@ int test_strcpy(char *test) {
 	printf("\tString copied by std strcpy:\t%s\n", std_buf);
 	printf("\tString copied by ft_strcpy:\t%s\n", ft_buf);
 	reset_color();
-	return (strcmp(ft_buf, std_buf) ? 1 : 0);
+	return (strcmp(ft_buf, std_buf) ? FAIL_STRCPY : 0);
 }
 
 int test_strcmp(const char *s1, const char *s2) {
 	int std_result = strcmp(s1,s2);
 	int ft_result = ft_strcmp(s1,s2);
 
-	printf("Testing ft_strlen against strcmp from string.h...\n");
+	printf("Testing ft_strlen against strcmp from string.h using strings '%s' and '%s'\n", s1, s2);
+	printf("Note that valgrind causes std strcmp to behave differently\n");
 	set_result_color(std_result - ft_result);
 	printf("\tResult of std strcmp = %d\n", std_result);
 	printf("\tResult of ft_strcmp = %d\n", ft_result);
 	reset_color();
-	return (std_result == ft_result ? 0 : 1);
+	return (std_result != ft_result ? FAIL_STRCMP : 0);
 }
 
 int test_write(void) {
 	printf("Implement write() test here\n");
-	return (1);
+	return (FAIL_WRITE);
 }
 
 int test_read(void) {
 	printf("Implement read() test here\n");
-	return (1);
+	return (FAIL_READ);
 }
 
 int test_strdup(const char *s1) {
@@ -85,7 +86,7 @@ int test_strdup(const char *s1) {
 	printf("\tDuplicated string %p = %s\n", s2, s2);
 	reset_color();
 	free (s2);
-	return(result ? 1 : 0);
+	return(s2 == NULL || result ? FAIL_STRDUP : 0);
 }
 
 void list_failures(size_t result) {
@@ -114,7 +115,7 @@ void list_failures(size_t result) {
 		printf("\tlist_remove_if\n");
 }
 
-void final_result(size_t result) {
+void check_results(size_t result) {
 	set_result_color(result);
 	if (result)
 		list_failures(result);
@@ -130,12 +131,17 @@ int main(void) {
 	size_t result = 0;
 
 	printf("Testing assembly code for libasm project\n");
-	result += test_strlen("Hello There");
-	result += test_strcpy("Hello There") << 1;
-	result += test_strcmp("", "ABC") << 2;
-	result += test_write() << 3;
-	result += test_read() << 4;
-	result += test_strdup("Hello there") << 5;
-	final_result(result);
+	result |= test_strlen("Hello There");
+	result |= test_strcpy("Hello There");
+	result |= test_strcmp("ABD", "ABC");
+	result |= test_strcmp("A", "ABC");
+	result |= test_strcmp("ABC", "");
+	result |= test_strcmp("", "");
+	result |= test_strcmp("", "A");
+	result |= test_strcmp("A", "");
+	result |= test_write();
+	result |= test_read();
+	result |= test_strdup("Hello there");
+	check_results(result);
 	return 0;
 }

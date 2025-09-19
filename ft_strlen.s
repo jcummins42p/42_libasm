@@ -1,3 +1,15 @@
+; **************************************************************************** #
+;                                                                              #
+;                                                         :::      ::::::::    #
+;    ft_strlen.s                                        :+:      :+:    :+:    #
+;                                                     +:+ +:+         +:+      #
+;    By: jcummins <jcummins@student.42prague.com>   +#+  +:+       +#+         #
+;                                                 +#+#+#+#+#+   +#+            #
+;    Created: 2025/09/19 15:07:32 by jcummins          #+#    #+#              #
+;    Updated: 2025/09/19 15:07:38 by jcummins         ###   ########.fr        #
+;                                                                              #
+; **************************************************************************** #
+
 ; comments in assembly indicated by semi-colon
 ; ft_strlen.s (NASM, Linux x86-64 SysV calling convention)
 ; size_t ft_strlen(const char *s);
@@ -27,3 +39,7 @@ ft_strlen:
 
 ; no need to worry about integer wraparound of the 64-bit rax register
 ; 1.8x10^19 byte long string would be taking exabytes of storage
+
+; Maybe I can use simd instructions to bit test a string?
+; find the position ofthe null byte more efficiently.
+; BT - bit test?
