@@ -5,7 +5,8 @@
 
 ; to use gdb with nasm, set to use intel-style disassembly with the command
 ;	set disassembly-flavor intel
-
+bits 64
+default rel
 global ft_strlen
 section .text
 

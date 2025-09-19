@@ -6,42 +6,14 @@
 /*   By: jcummins <jcummins@student.42prague.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 23:27:57 by jcummins          #+#    #+#             */
-/*   Updated: 2025/09/16 16:22:50 by jcummins         ###   ########.fr       */
+/*   Updated: 2025/09/19 12:03:34 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 //	Simple main to demonstrate assembly coded library functions for libasm
+//	Not required by subject or required to follow norminette
 
-#include <stdlib.h>	// abs
-#include <string.h> // strlen, strcmp
-#include <unistd.h>
-#include <stdio.h>	// printf
-
-#define ANSI_COLOR_RED		"\x1b[31m"
-#define ANSI_COLOR_GREEN	"\x1b[32m"
-#define ANSI_COLOR_RESET	"\x1b[0m"
-
-enum {
-	FAIL_STRLEN = 1u,
-	FAIL_STRCPY = 1u << 1,
-	FAIL_STRCMP = 1u << 2,
-	FAIL_WRITE = 1u << 3,
-	FAIL_READ = 1u << 4,
-	FAIL_STRDUP = 1u << 5,
-	FAIL_ATOI_BASE = 1u << 6,
-	FAIL_LIST_PUSH_FRONT = 1u << 7,
-	FAIL_LIST_SIZE = 1u << 8,
-	FAIL_LIST_SORT = 1u << 9,
-	FAIL_LIST_REMOVE_IF = 1u << 10
-};
-
-//	libasm declarations
-int ft_strlen(const char *str);
-//	restrict guarantees unique pointer for the duration of the variable
-//	allows the assembly to take fewer precautions to preserve values in case
-//	of pointer aliasing
-char *ft_strcpy(char *restrict dst, char *restrict src);
-int	ft_strcmp(const char *s1, const char *s2);
+#include "libasm.h"
 
 //	Pass an expression that should equal 0 on success
 void set_result_color(int failed) {
@@ -53,18 +25,6 @@ void set_result_color(int failed) {
 
 void reset_color(void) {
 	printf(ANSI_COLOR_RESET);
-}
-
-int test_strcmp(const char *s1, const char *s2) {
-	int std_result = strcmp(s1,s2);
-	int ft_result = ft_strcmp(s1,s2);
-
-	printf("Testing ft_strlen against strcmp from string.h...\n");
-	set_result_color(std_result - ft_result);
-	printf("\tResult of std strcmp = %d\n", std_result);
-	printf("\tResult of ft_strcmp = %d\n", ft_result);
-	reset_color();
-	return (std_result == ft_result ? 0 : 1);
 }
 
 int test_strlen(const char *test) {
@@ -91,6 +51,41 @@ int test_strcpy(char *test) {
 	printf("\tString copied by ft_strcpy:\t%s\n", ft_buf);
 	reset_color();
 	return (strcmp(ft_buf, std_buf) ? 1 : 0);
+}
+
+int test_strcmp(const char *s1, const char *s2) {
+	int std_result = strcmp(s1,s2);
+	int ft_result = ft_strcmp(s1,s2);
+
+	printf("Testing ft_strlen against strcmp from string.h...\n");
+	set_result_color(std_result - ft_result);
+	printf("\tResult of std strcmp = %d\n", std_result);
+	printf("\tResult of ft_strcmp = %d\n", ft_result);
+	reset_color();
+	return (std_result == ft_result ? 0 : 1);
+}
+
+int test_write(void) {
+	printf("Implement write() test here\n");
+	return (1);
+}
+
+int test_read(void) {
+	printf("Implement read() test here\n");
+	return (1);
+}
+
+int test_strdup(const char *s1) {
+	char *s2 = ft_strdup(s1);
+	int result = strcmp(s1,s2);
+
+	printf("Testing ft_strdup against strdup from string.h...\n");
+	set_result_color(result);
+	printf("\tOriginal string at address %p = %s\n", s1, s1);
+	printf("\tDuplicated string %p = %s\n", s2, s2);
+	reset_color();
+	free (s2);
+	return(result ? 1 : 0);
 }
 
 void list_failures(size_t result) {
@@ -135,9 +130,12 @@ int main(void) {
 	size_t result = 0;
 
 	printf("Testing assembly code for libasm project\n");
-	result &= test_strlen("Hello There");
-	result &= test_strcpy("Hello There");
-	result &= test_strcmp("", "ABC");
+	result += test_strlen("Hello There");
+	result += test_strcpy("Hello There") << 1;
+	result += test_strcmp("", "ABC") << 2;
+	result += test_write() << 3;
+	result += test_read() << 4;
+	result += test_strdup("Hello there") << 5;
 	final_result(result);
 	return 0;
 }
