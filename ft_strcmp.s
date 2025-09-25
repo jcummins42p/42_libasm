@@ -17,18 +17,18 @@ section .text
 ; argument order: rdi, rsi
 ft_strcmp:
 
-loop:
+.loop:
 	mov dl,[rdi]
 	mov cl,[rsi]
 	cmp byte dl, 0x00
-	je	end
+	je	.end
 	cmp dl,cl
-	jne	end
+	jne	.end
 	inc rdi	; increment both pointers
 	inc rsi
-	jmp	loop
+	jmp	.loop
 
-end:
+.end:
 	;	movsx = move with sign extension
 	movsx eax,dl ; need to promote bytes to 32-bit int for return value
 	movsx ecx,cl

@@ -40,7 +40,7 @@ ft_strdup:
 	call malloc	WRT ..plt ; procedure linkage table.
 
 	cmp rax,0x00	; null return check
-	je	err_malloc
+	je	.err_malloc
 
 	pop rsi			; put src string back into rsi
 	mov rdi,rax		; storing malloc'd pointer in rdi (dst)
@@ -51,6 +51,6 @@ ft_strdup:
 	add rsp, 8
 	ret
 
-err_malloc:
+.err_malloc:
 	xor rax,rax
 	ret

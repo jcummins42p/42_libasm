@@ -6,12 +6,14 @@
 #    By: jcummins <jcummins@student.42prague.com>   +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/08/09 22:55:48 by jcummins          #+#    #+#              #
-#    Updated: 2025/09/19 12:46:56 by jcummins         ###   ########.fr        #
+#    Updated: 2025/09/25 21:47:40 by jcummins         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = libasm.a
 
+TESTDIR = test
+HEADDIR = include
 TEST = main.c
 
 SRCS = 	ft_strlen.s ft_strcpy.s ft_strcmp.s ft_write.s ft_read.s ft_strdup.s
@@ -33,12 +35,8 @@ all: $(NAME)
 # to compile the test .c main with the assembly library
 # -L specifies a full library path to link library. -l looks in library folders
 test: all
-	$(CC) $(CFLAGS) $(TEST) -L. -l:$(NAME) -o test.out
+	$(CC) $(CFLAGS) $(TESTDIR)/src/$(TEST) -Iinclude -L. -l:$(NAME) -o test.out
 	./test.out
-
-nopie: all
-	$(CC) $(CFLAGS) -no-pie $(TEST) -L. -l:$(NAME) -o nopie.out
-	./nopie.out
 
 # to create the library from .o object files
 $(NAME): $(OBJS)
