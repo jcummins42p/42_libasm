@@ -6,7 +6,7 @@
 #    By: jcummins <jcummins@student.42prague.com>   +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/08/09 22:55:48 by jcummins          #+#    #+#              #
-#    Updated: 2025/09/25 21:47:40 by jcummins         ###   ########.fr        #
+#    Updated: 2025/09/26 16:45:28 by jcummins         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -35,8 +35,7 @@ all: $(NAME)
 # to compile the test .c main with the assembly library
 # -L specifies a full library path to link library. -l looks in library folders
 test: all
-	$(CC) $(CFLAGS) $(TESTDIR)/src/$(TEST) -Iinclude -L. -l:$(NAME) -o test.out
-	./test.out
+	(cd test/ && make)
 
 # to create the library from .o object files
 $(NAME): $(OBJS)
@@ -47,10 +46,12 @@ $(NAME): $(OBJS)
 
 clean:
 	rm -rf *.o
+	(cd test/ && make clean)
 
 fclean: clean
 	rm -rf $(NAME) a.out
 	rm -f ./test.out
+	(cd test/ && make fclean)
 
 re: fclean all
 

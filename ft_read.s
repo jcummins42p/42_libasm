@@ -18,17 +18,18 @@ extern __errno_location	; requires this function to access and change errno
 section .text
 
 ft_read:
-	mov	rax,0
-	;sub rsp,8	; aligning stack before call
-	syscall
-	cmp rax,0x00
+	xor	rax,rax	; syscall for read is 0 - this is more efficient than mov
+	syscall		; syscalls don't requirestack alignment?
+	cmp rax,0
 	jl .error
 	ret
 
 .error:
 	mov rdi,rax
 	neg rdi
+	sub rsp,8			; align stack before call
 	call __errno_location wrt ..plt	; puts a pointer to errno location in rax
-	mov [rax],edi		; returning -1 to show error
+	add rsp,8			; restore rsp
+	mov [rax],edi		; put errno at the required location
 	mov rax,-1
 	ret
