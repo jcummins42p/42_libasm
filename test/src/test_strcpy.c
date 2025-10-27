@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/26 15:16:17 by jcummins          #+#    #+#             */
-/*   Updated: 2025/09/26 16:32:45 by jcummins         ###   ########.fr       */
+/*   Updated: 2025/10/27 14:18:14 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 int	test_strcpy(char *test)
 {
-	char	std_buf[1024] = {0};
-	char	ft_buf[1024] = {0};
+	char	std_buf[4097] = {0};
+	char	ft_buf[4097] = {0};
 
 	printf("Testing ft_strcpy against strcpy from string.h...\n");
 	strcpy(std_buf, test);

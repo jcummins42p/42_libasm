@@ -29,9 +29,9 @@ ft_strcmp:
 	jmp	.loop
 
 .end:
-	;	movsx = move with sign extension
-	movsx eax,dl ; need to promote bytes to 32-bit int for return value
-	movsx ecx,cl
+	;	movzx = move with zero extension
+	movzx eax,dl ; need to promote bytes to 32-bit int for return value
+	movzx ecx,cl
 	sub eax,ecx
 	ret
 

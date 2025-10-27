@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 12:01:12 by jcummins          #+#    #+#             */
-/*   Updated: 2025/10/27 11:19:31 by jcummins         ###   ########.fr       */
+/*   Updated: 2025/10/27 14:52:18 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,12 +61,18 @@ int		test_strlen(const char *s);
 int		test_strcpy(char *test);
 int		test_strcmp(const char *s1, const char *s2);
 int		test_write(const char *msg, size_t write_size);
+int		test_write_fd(int fd, const char *msg, size_t write_size);
 int		test_write_autosize(const char *msg);
+
 int		test_read_fd(int fd, char *buf,
 			ssize_t (*read_fn)(int fd, void *buf, size_t count));
+
 int		test_read_func(const char *filename, char *buf,
 			ssize_t (*read_fn)(int fd, void *buf, size_t count));
 int		test_read(const char *filename);
+int		test_read_n(const char *filename, int n);
+
+
 int		test_strdup(const char *s1);
 void	list_failures(size_t result);
 void	check_results(size_t result);

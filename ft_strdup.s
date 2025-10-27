@@ -51,6 +51,6 @@ ft_strdup:
 	add rsp, 8
 	ret
 
-.err_malloc:
+.err_malloc: ; return NULL. Errno is automatically set by malloc
 	xor rax,rax
 	ret
