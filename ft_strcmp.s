@@ -30,9 +30,9 @@ ft_strcmp:
 
 .end:
 	;	movzx = move with zero extension
-	movzx eax,dl ; need to promote bytes to 32-bit int for return value
-	movzx ecx,cl
-	sub eax,ecx
+	movzx rax,dl ; need to promote bytes to 32-bit int for return value
+	movzx rcx,cl
+	sub rax,rcx
 	ret
 
 ;	Needing to debug this with valgrind, since it's producing different results
