@@ -11,8 +11,8 @@
 ; **************************************************************************** #
 
 ; C function declaration ft_strcpy(char *dst, char *src);
-bits 64
-default rel
+;.bits 64
+;.default rel
 global ft_strcpy
 section .text
 

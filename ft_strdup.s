@@ -12,8 +12,8 @@
 
 ; char *strdup(const char *s)
 ; rdi, rsi, rdx
-bits 64
-default rel
+;.bits 64
+;.default rel ; not applicable
 
 global ft_strdup
 extern malloc	; symbol malloc provided by libc at link stage

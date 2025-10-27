@@ -11,8 +11,8 @@
 ; **************************************************************************** #
 
 ; ssize_t read(int fd, void buf[count], size_t count);
-bits 64
-default rel
+;.bits 64
+;.default rel
 global ft_read
 extern __errno_location	; requires this function to access and change errno
 section .text

@@ -18,8 +18,8 @@
 	; rdx = size_t count
 ; so actually, all the argument registers should be correct.
 
-bits 64
-default rel
+;.bits 64
+;.default rel
 global ft_write
 extern __errno_location
 section .text
