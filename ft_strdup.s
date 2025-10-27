@@ -16,7 +16,7 @@ bits 64
 default rel
 
 global ft_strdup
-extern malloc
+extern malloc	; symbol malloc provided by libc at link stage
 extern ft_strcpy
 extern ft_strlen
 
@@ -42,7 +42,7 @@ ft_strdup:
 	cmp rax,0x00	; null return check
 	je	.err_malloc
 
-	pop rsi			; put src string back into rsi
+	pop rsi			; put src string ptr back into rsi
 	mov rdi,rax		; storing malloc'd pointer in rdi (dst)
 					; overwriting strlen + 1, which is not needed
 	sub	rsp,8		; align stack again

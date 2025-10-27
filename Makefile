@@ -6,7 +6,7 @@
 #    By: jcummins <jcummins@student.42prague.com>   +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/08/09 22:55:48 by jcummins          #+#    #+#              #
-#    Updated: 2025/09/26 16:45:28 by jcummins         ###   ########.fr        #
+#    Updated: 2025/10/27 11:28:01 by jcummins         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,9 +19,6 @@ TEST = main.c
 SRCS = 	ft_strlen.s ft_strcpy.s ft_strcmp.s ft_write.s ft_read.s ft_strdup.s
 
 OBJS = $(SRCS:.s=.o)
-
-CC = gcc
-CFLAGS = -O1 -g -Werror -Wextra -Wall
 
 # GNU ar archive program
 AR = ar

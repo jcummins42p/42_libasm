@@ -6,14 +6,14 @@
 /*   By: jcummins <jcummins@student.42prague.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 12:01:12 by jcummins          #+#    #+#             */
-/*   Updated: 2025/09/26 15:54:19 by jcummins         ###   ########.fr       */
+/*   Updated: 2025/10/27 11:19:31 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef LIBASM_H
 # define LIBASM_H
 
-# include <stdlib.h>	// abs
+# include <stdlib.h> // free (malloc not required as called by assembly func)
 # include <string.h> // strlen, strcmp
 # include <unistd.h> // read, write and default STDIN_FILENO
 # include <stdio.h>	// printf

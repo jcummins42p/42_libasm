@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/26 15:17:11 by jcummins          #+#    #+#             */
-/*   Updated: 2025/09/26 16:33:33 by jcummins         ###   ########.fr       */
+/*   Updated: 2025/10/27 10:46:31 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	test_strcmp(const char *s1, const char *s2)
 
 	std_result = strcmp(s1, s2);
 	ft_result = ft_strcmp(s1, s2);
-	printf("Testing ft_strlen against strcmp using strings '%s' and '%s'\n",
+	printf("Testing ft_strcmp against strcmp using strings '%s' and '%s'\n",
 		s1, s2);
 	set_result_color(std_result - ft_result);
 	printf("\tResult of std strcmp = %d\n", std_result);

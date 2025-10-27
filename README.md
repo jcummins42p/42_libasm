@@ -833,7 +833,52 @@ main:
 	* The red zone will not be overwritten by any signal or interrupt handler
 	* Compilers can save local variables here
 	* gcc can disable with -mno-red-zone
-	
+
+* SIMD fundamentals
+```	
+; MOVDQU xmm, mem
+; move unaligned double-quadword. reads 128 bits of ineger data into an SSE register
+; PADDD xmm, xmm
+; Packed addition of Dwords. Adds corresponding 32 bit integers from operands
+; stores in first operand
+simd addition:
+	movdqu xmm0, xmmword ptr [my_ints1]
+	movdqu xmm1, xmmword ptr [my_ints2]
+
+	paddd xmm0, xmm1
+
+; SSE is one of the most common SIMD instruction sets - cirtually all x64 cpus
+; Contains 128 bit vectors	-> 16 bytes
+;							-> 8 words (short)
+;							-> 4 dwords (int)
+;							-> 2 qwords (long long)
+;							-> 4 floats
+;							-> 2 doubles
+
+; AVX are double the size of SSE at 256 bits wide
+;							-> 32 byte operations
+;							-> 16 short integers
+;							-> 8 dwords (int)
+;							-> 4 qwords (long long)
+;							-> 8 single precision float
+;							-> 4 double
+
+; AVX512 contains 512 bit vectors
+;							-> 64 bytes
+;							-> 32 short
+;							-> 16 int
+;							-> 8 long long
+;							-> 16 float
+;							-> 8 double
+
+; Intrinsics in C++ using AVX containing 4 doubles:
+; #include <intrin.h>
+; __m256a = { 0.0, 1.0, 2.0, 3.0 }
+; __m256b = { 4.0, 5.0, 6.0, 7.0 }
+; __m256c;
+;
+; c = _mm256_add_pd(a, b);
+```
 
 --------------------
 # ***Simple x86 Operating System Fundamentals***
@@ -981,3 +1026,4 @@ os_boot_msg: DB "Hello OS World!",0x0D,0x0A,0 ; carriage return, newline, null
 	* Used in drives expected to be used by multiple operating systems
 	* The FAT is a linked list of entries for each cluster
 	* Each entry in the FAT is a fixed number of bits: 12, 16, 32 etc
+```
